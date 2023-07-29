@@ -1,0 +1,26 @@
+# Dockerfile.rails
+
+# Define a imagem base.
+FROM ruby:3.1.2 AS rails-toolbox
+
+# Define uma variável de ambiente chamada INSTALL_PATH e atribui o valor "/opt/app". Essa variável será usada para especificar o diretório de instalação da aplicação.
+ENV INSTALL_PATH /opt/app
+
+# Cria o diretório especificado na variável de ambiente INSTALL_PATH (/opt/app) dentro da imagem.
+RUN mkdir -p $INSTALL_PATH
+
+# Instala o Rails e o Bundler dentro da imagem. 
+RUN gem install rails bundler
+
+# Define o diretório de trabalho padrão dentro da imagem como /opt/app. 
+WORKDIR /opt/app
+
+# Cria usuário não privilegiado chamado "user" para executar a aplicação dentro do contêiner.
+RUN useradd -m -s /bin/bash user
+
+# Altera o proprietário e o grupo do diretório /opt/app para o usuário "user" para evitar problemas de permissão ao copiar arquivos da aplicação para dentro do contêiner.
+RUN chown -R user:user /opt/app
+
+# Executa shell
+CMD ["/bin/sh"]
+

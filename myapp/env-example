@@ -1,0 +1,12 @@
+SECRET_TOKEN=Wa4Kdu6hMt3tYKm4jb9p4vZUuc7jBVFw  # Segredo do token da aplicação Rails.
+
+WORKER_PROCESSES=1  # Número de processos de trabalhador do Unicorn.
+
+LISTEN_ON=0.0.0.0:8010  # Endereço IP e porta em que o servidor do Unicorn escuta.
+
+DATABASE_URL=postgresql://drkiq:test_db_password@postgres:5432/drkiq?encoding=utf8&pool=5&timeout=5000  # URL de conexão com o banco de dados PostgreSQL.
+
+CACHE_URL=redis://redis:6379/0  # URL de conexão com o Redis para o cache da aplicação.
+
+JOB_WORKER_URL=redis://redis:6379/0  # URL de conexão com o Redis para o Sidekiq.
+

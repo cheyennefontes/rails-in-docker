@@ -1,0 +1,12 @@
+development:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_development?') %>  # URL de conexão com o banco de dados para o ambiente de desenvolvimento.
+
+test:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_test?') %>  # URL de conexão com o banco de dados para o ambiente de teste.
+
+staging:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_staging?') %>  # URL de conexão com o banco de dados para o ambiente de preparação (staging).
+
+production:
+  url: <%= ENV['DATABASE_URL'].gsub('?', '_production?') %>  # URL de conexão com o banco de dados para o ambiente de produção.
+

@@ -1,0 +1,16 @@
+# Imagem base do NGINX usando a versão mais recente.
+FROM nginx:latest
+
+# Copia o arquivo de configuração reverse-proxy.conf para a pasta de configurações do NGINX.
+COPY reverse-proxy.conf /etc/nginx/conf.d/reverse-proxy.conf
+
+# Expõe a porta 8020 para o host para que seja possível acessar o servidor NGINX através dela.
+EXPOSE 8020
+
+# Define o sinal SIGTERM como sinal de parada para o container.
+STOPSIGNAL SIGTERM
+
+# Comando padrão para iniciar o NGINX em modo daemon.
+# Isso inicia o servidor NGINX no container e o mantém em execução em primeiro plano.
+CMD ["nginx", "-g", "daemon off;"]
+

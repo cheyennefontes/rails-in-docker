@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:14.2
+    environment:
+      POSTGRES_USER: myapp  # Nome de usuário do PostgreSQL definido como "MyApp".
+      POSTGRES_PASSWORD: test_db_password  # Senha do usuário do PostgreSQL.
+    ports: 
+      - '5432:5432'  # Mapeia a porta 5432 do host para a porta 5432 do container do PostgreSQL.
+    volumes:
+      - myapp-postgres:/var/lib/postgresql/data  # Volume nomeado "MyApp-postgres" para persistir os dados do PostgreSQL.
+
+  redis:
+    image: redis:7.0
+    ports:
+      - '6379:6379'  # Mapeia a porta 6379 do host para a porta 6379 do container do Redis.
+    volumes:
+      - myapp-redis:/var/lib/redis/data  # Volume nomeado "MyApp-redis" para persistir os dados do Redis.
+
+  myapp:
+    build:
+      context: .   # Contexto de construção para o serviço "MyApp".
+    volumes:
+      - ./myapp:/opt/app   # Monta o diretório local "MyApp" para dentro do container em "/opt/app".
+    links:
+      - postgres   # Liga o serviço "MyApp" ao serviço "postgres" para comunicação.
+      - redis      # Liga o serviço "MyApp" ao serviço "redis" para comunicação.
+    ports:
+      - '8010:8010'   # Expõe a porta 8010 do host para acessar o serviço "MyApp" no container.
+    env_file:
+      - .env   # Carrega as variáveis de ambiente do arquivo ".env" para o serviço "MyApp".
+
+  sidekiq:
+    build:
+      context: .   # Contexto de construção para o serviço "sidekiq".
+    command: bundle exec sidekiq   # Comando para executar o Sidekiq quando o container iniciar.
+    links:
+      - postgres   # Liga o serviço "sidekiq" ao serviço "postgres" para comunicação.
+      - redis      # Liga o serviço "sidekiq" ao serviço "redis" para comunicação.
+    env_file:
+      - .env   # Carrega as variáveis de ambiente do arquivo ".env" para o serviço "sidekiq".
+
+  nginx:
+    build:
+      context: .   # Contexto de construção para o serviço "nginx".
+      dockerfile: ./Dockerfile.nginx  # Usa o Dockerfile específico para a construção da imagem do NGINX.
+    links:
+      - myapp   # Liga o serviço "nginx" ao serviço "MyApp" (aplicativo "drkiq") para comunicação.
+    ports:
+      - '8020:8020'   # Expõe a porta 8020 do host para acessar o serviço "nginx" no container.
+
+volumes:
+  myapp-postgres:   # Volume nomeado "MyApp-postgres" para persistir dados do PostgreSQL.
+  myapp-redis:      # Volume nomeado "MyApp-redis" para persistir dados do Redis.
+
